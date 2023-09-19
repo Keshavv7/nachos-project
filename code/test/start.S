@@ -234,6 +234,14 @@ PrintString:
 	j	$31
 	.end PrintString
 
+	.globl Printkex
+	.ent Printkex
+Printkex:
+	addiu $2,$0,SC_Printkex
+	syscall
+	j	$31
+	.end Printkex
+
 	.globl CreateFile
 	.ent	CreateFile
 CreateFile:

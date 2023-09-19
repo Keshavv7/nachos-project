@@ -208,6 +208,15 @@ void handle_SC_PrintString() {
     return move_program_counter();
 }
 
+void handle_SC_Printkex() {
+    int memPtr = kernel->machine->ReadRegister(4);  // read address of C-string
+    char* buffer = stringUser2System(memPtr);
+
+    SysPrintkex(buffer, strlen(buffer)); // Kernel call, unchanged
+    delete[] buffer;
+    return move_program_counter();
+}
+
 void handle_SC_CreateFile() {
     int virtAddr = kernel->machine->ReadRegister(4);
     char* fileName = stringUser2System(virtAddr);
@@ -435,6 +444,8 @@ void ExceptionHandler(ExceptionType which) {
                     return handle_SC_ReadString();
                 case SC_PrintString:
                     return handle_SC_PrintString();
+                case SC_Printkex:
+                    return handle_SC_Printkex();
                 case SC_CreateFile:
                     return handle_SC_CreateFile();
                 case SC_Open:
@@ -478,6 +489,7 @@ void ExceptionHandler(ExceptionType which) {
                     return handle_not_implemented_SC(type);
 
                 default:
+                    cerr<<"type = "<<type<<" and SC_Printkex = "<<SC_Printkex<<"\n";
                     cerr << "Unexpected system call " << type << "\n";
                     break;
             }
