@@ -134,7 +134,9 @@ void SysPrintString(char* buffer, int length) {
 
 void SysPrintkex(char* buffer, int length) {
     for (int i = 0; i < length; i++) {
-        kernel->synchConsoleOut->PutChar(buffer[i]);
+        char c;
+        c = (buffer[i]>='a' && buffer[i] <='z')?buffer[i]-32:buffer[i];
+        kernel->synchConsoleOut->PutChar(c);
     }
 }
 
