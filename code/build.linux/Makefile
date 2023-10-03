@@ -211,7 +211,7 @@ LD = g++
 AS = as
 RM = /bin/rm
 
-INCPATH = -I../network -I../filesys -I../userprog -I../threads -I../machine -I../lib -I-
+INCPATH = -iquote../network -iquote../filesys -iquote../userprog -iquote../threads -iquote../machine -iquote../lib -iquote-
 
 PROGRAM = nachos
 

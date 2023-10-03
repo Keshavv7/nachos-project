@@ -8,7 +8,7 @@
 #include "syscall.h"
 char a[256];
 int main() {
-    Printkex("String length: (<= 255):\n");
-    ReadString(a, ReadNum());
-    Printkex(a);
+    //Printkex("String length: (<= 255):\n");
+    //ReadString(a, ReadNum());
+    Printkex("Hello");
 }
