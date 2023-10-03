@@ -3,7 +3,7 @@ Not Another Completely Heuristic Operating System
 
 This is our course-work for the OS course in IIT Tirupati and is a fork of the repository: https://github.com/leduythuccs/nachos-project
 
-I have made hanges to this repo and added some extra functionality as the part of the coursework.
+I have made changes to this repo and added some extra functionality as the part of the coursework.
 
 Nashos version: 4.0
 
