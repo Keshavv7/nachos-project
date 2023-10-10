@@ -9,6 +9,7 @@
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 
+#include <bits/stdc++.h>
 #include "copyright.h"
 #include "list.h"
 #include "thread.h"
@@ -32,13 +33,31 @@ class Scheduler {
                                 // running needs to be deleted
     void Print();               // Print contents of ready list
 
+    bool checkPriority();     // Getter to check if priority scheduling is enabled
+
     // SelfTest for scheduler is implemented in class Thread
 
    private:
+    bool priorityEnabled;
+
     List<Thread*>* readyList;  // queue of threads that are ready to run,
                                // but not running
+
+    List<Thread*>* sleepList;  // queue of threads that are in sleep state
+
     Thread* toBeDestroyed;     // finishing thread to be destroyed
                                // by the next thread that runs
+
+    struct comparePriority {
+      bool operator() (const pair<int, Thread*>& a,
+                       const pair<int, Thread*>& b) {
+                        return a.first > b.first;
+      }
+    };
+
+    priority_queue<pair<int, Thread*>, vector<pair<int, Thread*>>, 
+                  comparePriority> pq; // First element of the pair corresponds to the priority
+                                       // Second element of the pair corresponds to the thread
 };
 
 #endif  // SCHEDULER_H

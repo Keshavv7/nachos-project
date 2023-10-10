@@ -32,6 +32,19 @@
 Scheduler::Scheduler() {
     readyList = new List<Thread *>;
     toBeDestroyed = NULL;
+    priorityEnabled = false;
+}
+
+//----------------------------------------------------------------------
+// Scheduler::Scheduler
+// 	Initialize the list of ready but not running threads.
+//	Initially, no ready threads, but initialize scheduling algorithm
+//----------------------------------------------------------------------
+
+Scheduler::Scheduler(bool priorityFlag) {
+    readyList = new List<Thread *>;
+    toBeDestroyed = NULL;
+    priorityEnabled = priorityFlag;
 }
 
 //----------------------------------------------------------------------
@@ -54,7 +67,13 @@ void Scheduler::ReadyToRun(Thread *thread) {
     DEBUG(dbgThread, "Putting thread on ready list: " << thread->getName());
 
     thread->setStatus(READY);
-    readyList->Append(thread);
+
+    if (!priorityEnabled){
+        readyList->Append(thread);
+    } else {
+        int newPriority = rand() % 100 + 1;
+        pq.push(make_pair(newPriority, thread));
+    }
 }
 
 //----------------------------------------------------------------------
@@ -68,10 +87,20 @@ void Scheduler::ReadyToRun(Thread *thread) {
 Thread *Scheduler::FindNextToRun() {
     ASSERT(kernel->interrupt->getLevel() == IntOff);
 
-    if (readyList->IsEmpty()) {
-        return NULL;
+    if (!priorityEnabled){
+        if (readyList->IsEmpty()) {
+            return NULL;
+        } else {
+            return readyList->RemoveFront();
+        }
     } else {
-        return readyList->RemoveFront();
+        if (pq.empty()) {
+            return NULL;
+        } else {
+            Thread* nextThread = pq.top().second;
+            pq.pop();
+            return nextThread; 
+        }
     }
 }
 
@@ -162,5 +191,16 @@ void Scheduler::CheckToBeDestroyed() {
 //----------------------------------------------------------------------
 void Scheduler::Print() {
     cout << "Ready list contents:\n";
-    readyList->Apply(ThreadPrint);
+    if (!priorityEnabled){
+        readyList->Apply(ThreadPrint);
+    } else {
+        priority_queue<pair<int, Thread*>, vector<pair<int, Thread*>>, 
+                  comparePriority> pqDummy = pq; // Dummy priority queue for printing
+
+        while (!pqDummy.empty()) {
+            cout << pqDummy.top().second->getName() << " ";
+            pqDummy.pop();
+        }
+        cout << endl;
+    }
 }
