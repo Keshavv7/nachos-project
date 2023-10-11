@@ -21,6 +21,7 @@
 class Scheduler {
    public:
     Scheduler();   // Initialize list of ready threads
+    Scheduler(bool priorityFlag); // Initialize a priority queue of ready threads
     ~Scheduler();  // De-allocate ready list
 
     void ReadyToRun(Thread* thread);

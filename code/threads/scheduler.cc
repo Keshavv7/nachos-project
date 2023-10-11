@@ -71,7 +71,8 @@ void Scheduler::ReadyToRun(Thread *thread) {
     if (!priorityEnabled){
         readyList->Append(thread);
     } else {
-        int newPriority = rand() % 100 + 1;
+        // int newPriority = rand() % 100 + 1;
+        int newPriority = thread->processID;
         pq.push(make_pair(newPriority, thread));
     }
 }
