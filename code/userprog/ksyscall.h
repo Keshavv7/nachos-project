@@ -126,6 +126,14 @@ char* SysReadString(int length) {
     return buffer;
 }
 
+void SysSleepUntil(int delayUntil){
+    kernel->alarm->WaitUntil(delayUntil);
+    auto currentStateOfInterrupt = kernel->interrupt->getLevel();
+    kernel->interrupt->SetLevel(IntOff);
+    kernel->currentThread->Sleep(false);
+    kernel->interrupt->SetLevel(currentStateOfInterrupt);
+}
+
 void SysPrintString(char* buffer, int length) {
     for (int i = 0; i < length; i++) {
         kernel->synchConsoleOut->PutChar(buffer[i]);

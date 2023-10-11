@@ -22,6 +22,12 @@
 #include "callback.h"
 #include "timer.h"
 
+struct ThreadWait{
+   Thread* current;
+   int delayUntil;
+   ThreadWait* next;
+};
+
 // The following class defines a software alarm clock.
 class Alarm : public CallBackObj {
    public:
@@ -33,6 +39,8 @@ class Alarm : public CallBackObj {
                             // this method is not yet implemented
 
    private:
+    ThreadWait* SleepList = NULL;
+
     Timer *timer;  // the hardware timer device
 
     void CallBack();  // called when the hardware

@@ -40,11 +40,44 @@ Alarm::Alarm(bool doRandom) { timer = new Timer(doRandom, this); }
 //      if we're currently running something (in other words, not idle).
 //----------------------------------------------------------------------
 
+
 void Alarm::CallBack() {
     Interrupt *interrupt = kernel->interrupt;
     MachineStatus status = interrupt->getStatus();
 
+    ThreadWait* curr = SleepList;
+    ThreadWait* prev = NULL;
+    ThreadWait* temp;
+    
+    while (curr!=NULL){
+        if (curr->delayUntil == kernel->stats->systemTicks){
+            kernel->scheduler->ReadyToRun(curr->current);
+            if (prev == NULL){
+                SleepList = curr->next;
+                temp = curr;
+            }
+            else {
+                prev->next = curr->next;
+                temp = curr;
+            }
+            curr = curr->next;
+            free(temp);
+        }
+        else{
+            prev = curr;
+            curr = curr->next;
+        }
+    }
+
     if (status != IdleMode) {
         interrupt->YieldOnReturn();
     }
+}
+
+void Alarm::WaitUntil(int x){
+    ThreadWait* nn = (ThreadWait*)malloc(sizeof(ThreadWait));
+    nn->current = kernel->currentThread;
+    nn->delayUntil = kernel->stats->systemTicks+x;
+    nn->next = SleepList;
+    SleepList = nn;
 }
