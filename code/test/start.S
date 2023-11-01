@@ -242,6 +242,14 @@ Printkex:
 	j	$31
 	.end Printkex
 
+	.globl SleepUntil
+	.ent	SleepUntil
+SleepUntil:
+	addiu $2,$0,SC_SleepUntil
+	syscall
+	j	$31
+	.end SleepUntil
+
 	.globl CreateFile
 	.ent	CreateFile
 CreateFile:

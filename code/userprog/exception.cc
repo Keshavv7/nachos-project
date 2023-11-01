@@ -217,6 +217,13 @@ void handle_SC_Printkex() {
     return move_program_counter();
 }
 
+void handle_SC_SleepUntil() {
+    int delayUntil = kernel->machine->ReadRegister(4);  // read the number
+
+    SysSleepUntil(delayUntil); // Kernel call, unchanged
+    return move_program_counter();
+}
+
 void handle_SC_CreateFile() {
     int virtAddr = kernel->machine->ReadRegister(4);
     char* fileName = stringUser2System(virtAddr);
@@ -446,6 +453,8 @@ void ExceptionHandler(ExceptionType which) {
                     return handle_SC_PrintString();
                 case SC_Printkex:
                     return handle_SC_Printkex();
+                case SC_SleepUntil:
+                    return handle_SC_SleepUntil();
                 case SC_CreateFile:
                     return handle_SC_CreateFile();
                 case SC_Open:
