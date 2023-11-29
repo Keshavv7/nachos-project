@@ -75,9 +75,11 @@ void Alarm::CallBack() {
 }
 
 void Alarm::WaitUntil(int x){
+    
     ThreadWait* nn = (ThreadWait*)malloc(sizeof(ThreadWait));
     nn->current = kernel->currentThread;
     nn->delayUntil = kernel->stats->systemTicks+x;
     nn->next = SleepList;
     SleepList = nn;
+    
 }
